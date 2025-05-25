@@ -20,29 +20,21 @@
       }
       .creditos {
         font-size: 16px;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         color: #222;
         font-weight: bold;
-      }
-      .imagem-topo {
-        max-width: 280px;
-        margin-bottom: 20px;
       }
       .frase {
         font-size: 28px;
         font-weight: 500;
         padding: 20px;
-        background-color: #ffffffd9;
+        background-color: rgba(255, 255, 255, 0.85);
         border-radius: 12px;
         max-width: 90%;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        min-height: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        margin-bottom: 30px;
       }
       .logo {
-        margin-top: 30px;
         width: 140px;
         opacity: 1;
       }
@@ -50,46 +42,29 @@
   </head>
   <body>
     <div class="creditos">Feito por MugShopp - Presentes Personalizados</div>
-    <img class="imagem-topo" src="https://i.postimg.cc/5YM7SwJv/flores.jpg" alt="Reflexões do Dia" />
     <div class="frase" id="frase">Carregando frase...</div>
     <img class="logo" src="https://i.postimg.cc/f3Hyxvmq/mugshopp-logo.png" alt="Logo MugShopp" />
 
     <script>
-      const frases = [
-        "A mente é um universo em constante expansão.",
-        "Expanda seus horizontes para expandir sua consciência.",
-        "O conhecimento é a chave para a liberdade mental.",
-        "Liberte sua mente dos limites autoimpostos.",
-        "Pensar além é a primeira etapa da evolução.",
-        "A mente aberta cria possibilidades infinitas.",
-        "O despertar começa quando questionamos nossas crenças.",
-        "O silêncio da mente é o espaço para a sabedoria.",
-        "A curiosidade é o combustível da expansão mental.",
-        "Crescer é aceitar que não sabemos tudo.",
-        // (coloque aqui todas as frases que quiser, adicione mais se quiser)
-        "A mente expande quando buscamos o desconhecido.",
-        "O pensamento é o motor da transformação interior.",
-        "Aceitar a mudança é abrir a porta para o crescimento.",
-        "A sabedoria está na jornada, não no destino.",
-        "Cada ideia nova é um passo para a liberdade.",
-        "Expandir a mente é expandir a alma.",
-        "O autoconhecimento é o início da verdadeira expansão.",
-        "Não tenha medo de pensar diferente.",
-        "Toda grande descoberta começa com uma pergunta.",
-        "A mente que se abre a uma nova ideia jamais voltará ao seu tamanho original."
-      ];
-
-      function mostrarFraseDoDia() {
-        const hoje = new Date();
-        const inicio = new Date(hoje.getFullYear(), 0, 0);
-        const diff = hoje - inicio;
-        const umDia = 1000 * 60 * 60 * 24;
-        const diaDoAno = Math.floor(diff / umDia);
-        const frase = frases[diaDoAno % frases.length];
-        document.getElementById('frase').textContent = `"${frase}"`;
+      async function carregarFrase() {
+        try {
+          const response = await fetch('frases.txt');
+          if (!response.ok) throw new Error('Arquivo frases.txt não encontrado');
+          const texto = await response.text();
+          const frases = texto.split('\n').filter(l => l.trim() !== '');
+          const hoje = new Date();
+          const inicio = new Date(hoje.getFullYear(), 0, 0);
+          const diff = hoje - inicio;
+          const umDia = 1000 * 60 * 60 * 24;
+          const diaDoAno = Math.floor(diff / umDia);
+          const frase = frases[diaDoAno % frases.length];
+          document.getElementById('frase').textContent = `"${frase}"`;
+        } catch (e) {
+          document.getElementById('frase').textContent = 'Erro ao carregar a frase do dia.';
+          console.error(e);
+        }
       }
-
-      mostrarFraseDoDia();
+      carregarFrase();
     </script>
   </body>
 </html>
